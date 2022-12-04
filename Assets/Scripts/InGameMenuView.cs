@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InGameMenuView : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class InGameMenuView : MonoBehaviour
     [SerializeField] private Button _skipWordButton;
     [SerializeField] private Button _returnButton;
 
+    [SerializeField] private TMP_Text _noWordsMessage;
     [SerializeField] private TimerView _timerView;
     [SerializeField] private WordView _wordView;
     [SerializeField] private WordsGuessedCountView _wordsGuessedCountView;
@@ -17,6 +20,10 @@ public class InGameMenuView : MonoBehaviour
     private event Action _onWordGuessedButtonClick;
     private event Action _onSkipWordButtonClick;
     private event Action _onReturnButtonClick;
+
+    private Coroutine _coroutine;
+
+    public bool isTimerRunnig => _coroutine != null;
 
     public bool StartRoundButtonEnabled
     {
@@ -34,6 +41,12 @@ public class InGameMenuView : MonoBehaviour
     {
         get => _skipWordButton.gameObject.activeSelf;
         set => _skipWordButton.gameObject.SetActive(value);
+    }
+
+    public bool NoWordsMessageEnabled
+    {
+        get => _noWordsMessage.gameObject.activeSelf;
+        set => _noWordsMessage.gameObject.SetActive(value);
     }
 
     public bool TimerViewEnabled
@@ -69,10 +82,18 @@ public class InGameMenuView : MonoBehaviour
         set => _wordsGuessedCountView.text = value.ToString();
     }
 
-    public void StartTimer(float seconds, Action callback) =>
-        _timerView.StartTimer(seconds, callback);
+    public void StartTimer(float seconds, Action callback)
+    {
+        StopTimer();
 
-    public void StopTimer() => _timerView.StopTimer();
+        _coroutine = StartCoroutine(TimerCoroutine(seconds, callback));
+    }
+
+    public void StopTimer()
+    {
+        if (isTimerRunnig)
+            StopCoroutine(_coroutine);
+    }
 
     private void Awake()
     {
@@ -128,5 +149,18 @@ public class InGameMenuView : MonoBehaviour
     private void OnReturnButtonClickHandler()
     {
         _onReturnButtonClick?.Invoke();
+    }
+
+    private IEnumerator TimerCoroutine(float seconds, Action callback)
+    {
+        while (seconds > 0)
+        {
+            yield return null;
+            seconds -= Time.deltaTime;
+            _timerView.text = ((int)seconds).ToString();
+        }
+
+        _coroutine = null;
+        callback();
     }
 }

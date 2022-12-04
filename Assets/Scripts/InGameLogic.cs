@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 public class InGameLogic
 {
@@ -24,14 +22,7 @@ public class InGameLogic
         _inGameMenuView.SubscribeReturnButtonClick(OnReturnButtonClickHandler);
     }
 
-    public void InitLogicToPlay()
-    {
-        var wordsToGuess = WordsToGuessLoader.LoadWords(_gameSettingsController.wordsFile);
-        _guessWordsLogic.StartToGuess(wordsToGuess);
-        _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
-
-        SetReadyToPlayFirstRoundState();
-    }
+    public void InitLogicToPlay() => SetReadyToPlayFirstRoundState();    
 
     public void SubscribeOnReturn(Action handler)
     {
@@ -40,10 +31,15 @@ public class InGameLogic
 
     private void SetReadyToPlayFirstRoundState()
     {
+        var wordsToGuess = WordsToGuessLoader.LoadWords(_gameSettingsController.wordsFile);
+        _guessWordsLogic.StartToGuess(wordsToGuess);
+        _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
+
         _inGameMenuView.StartRoundButtonEnabled = true;
         _inGameMenuView.WordGuessedButtonEnabled = false;
         _inGameMenuView.SkipWordButtonEnabled = false;
-        _inGameMenuView.TimerViewEnabled = true;
+        _inGameMenuView.NoWordsMessageEnabled = false;
+        _inGameMenuView.TimerViewEnabled = false;
         _inGameMenuView.WordViewEnabled = false;
         _inGameMenuView.WordsGuessedCountViewEnabled = false;
 
@@ -55,7 +51,8 @@ public class InGameLogic
         _inGameMenuView.StartRoundButtonEnabled = true;
         _inGameMenuView.WordGuessedButtonEnabled = false;
         _inGameMenuView.SkipWordButtonEnabled = false;
-        _inGameMenuView.TimerViewEnabled = true;
+        _inGameMenuView.NoWordsMessageEnabled = false;
+        _inGameMenuView.TimerViewEnabled = false;
         _inGameMenuView.WordViewEnabled = false;
         _inGameMenuView.WordsGuessedCountViewEnabled = true;
 
@@ -64,33 +61,47 @@ public class InGameLogic
 
     private void SetPlayingRoundState()
     {
+        _inGameMenuView.wordToGuess = _guessWordsLogic.GetNextWord();
+
+        _inGameMenuView.StartTimer(_gameSettingsController.roundDuration, OnTimerFinished);
+
+        _guessedWordsCount = 0;
+
         _inGameMenuView.StartRoundButtonEnabled = false;
         _inGameMenuView.WordGuessedButtonEnabled = true;
         _inGameMenuView.SkipWordButtonEnabled = true;
+        _inGameMenuView.NoWordsMessageEnabled = false;
         _inGameMenuView.TimerViewEnabled = true;
         _inGameMenuView.WordViewEnabled = true;
         _inGameMenuView.WordsGuessedCountViewEnabled = false;
     }
 
+    private void SetNoWordsState()
+    {
+        _inGameMenuView.StopTimer();
+        _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
+
+        _inGameMenuView.StartRoundButtonEnabled = false;
+        _inGameMenuView.WordGuessedButtonEnabled = false;
+        _inGameMenuView.SkipWordButtonEnabled = false;
+        _inGameMenuView.NoWordsMessageEnabled = true;
+        _inGameMenuView.TimerViewEnabled = false;
+        _inGameMenuView.WordViewEnabled = false;
+        _inGameMenuView.WordsGuessedCountViewEnabled = true;
+    }
+
     private void OnStartRoundButtonHandler()
     {
-        _inGameMenuView.wordToGuess = _guessWordsLogic.GetNextWord();
-
-        _inGameMenuView.StartTimer(_gameSettingsController.roundDuration, OnTimerFinished);
-
         SetPlayingRoundState();
     }
 
     private void OnWordGuessedButtonHandler()
     {
         ++_guessedWordsCount;
-        _inGameMenuView.wordToGuess = _guessWordsLogic.GetNextWord();
+        TryToGetNextWord();
     }
 
-    private void OnSkipWordButtonHandler()
-    {
-        _inGameMenuView.wordToGuess = _guessWordsLogic.GetNextWord();
-    }
+    private void OnSkipWordButtonHandler() => TryToGetNextWord();
 
     private void OnReturnButtonClickHandler()
     {
@@ -102,5 +113,14 @@ public class InGameLogic
     {
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
         SetReadyToPlayAnotherRoundState();
+    }
+
+    private void TryToGetNextWord()
+    {
+        var nextWord = _guessWordsLogic.GetNextWord();
+        if (nextWord == null)
+            SetNoWordsState();
+        else
+            _inGameMenuView.wordToGuess = nextWord;
     }
 }
