@@ -58,3 +58,4 @@ HatGame.sln
 .vs/
 obj/
 Assembly-CSharp-firstpass.csproj
+Builds/
