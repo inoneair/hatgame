@@ -55,3 +55,6 @@ UserSettings/
 Assembly-CSharp.csproj
 Assembly-CSharp-Editor.csproj
 HatGame.sln
+.vs/
+obj/
+Assembly-CSharp-firstpass.csproj
