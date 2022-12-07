@@ -6,10 +6,12 @@ public class MainMenuView : MonoBehaviour
 {
     [SerializeField] Button _startButton;
     [SerializeField] ChooseWordsFileView _chooseWordsFileView;
+    [SerializeField] SetRoundDurationView _setRoundDurationView;
     [SerializeField] Button _exitButton;
 
     private Action _onStartButonClick;
     private Action<string> _onWordsFileChosen;
+    private Action<int> _onRoundDurationChanged;
     private Action _onExitButonClick;
 
     public string wordsFile
@@ -28,6 +30,7 @@ public class MainMenuView : MonoBehaviour
     {
         _startButton.onClick.AddListener(OnStartButtonClickHandler);
         _chooseWordsFileView.SubscribeOnFileChosen(OnWordsFileChosenHandler);
+        _setRoundDurationView.SubscribeOnRoundDurationChanged(OnRoundDurationChangedHandler);
         _exitButton.onClick.AddListener(OnExitButtonClickHandler);
     }
 
@@ -38,7 +41,10 @@ public class MainMenuView : MonoBehaviour
     }
 
     public void SetWordsFileWithoutNotify(string wordsFile) =>    
-        _chooseWordsFileView.SetFilePathWihoutNotify(wordsFile);    
+        _chooseWordsFileView.SetFilePathWihoutNotify(wordsFile);
+
+    public void SetRoundDurationWithoutNotify(int roundDuration) =>
+        _setRoundDurationView.SetRoundDurationWithoutNotify(roundDuration);
 
     public void SubscribeOnStartButtonCLick(Action handler)
     {
@@ -50,6 +56,11 @@ public class MainMenuView : MonoBehaviour
         _onWordsFileChosen += handler;
     }
 
+    public void SubscribeOnRoundDurationChanged(Action<int> handler)
+    {
+        _onRoundDurationChanged += handler;
+    }
+
     public void SubscribeOnExitButtonCLick(Action handler)
     {
         _onExitButonClick += handler;
@@ -59,6 +70,7 @@ public class MainMenuView : MonoBehaviour
 
     private void OnWordsFileChosenHandler(string filePath) => _onWordsFileChosen?.Invoke(filePath);
 
-    private void OnExitButtonClickHandler() => _onExitButonClick?.Invoke();
+    private void OnRoundDurationChangedHandler(int roundDuration) => _onRoundDurationChanged?.Invoke(roundDuration);
 
+    private void OnExitButtonClickHandler() => _onExitButonClick?.Invoke();
 }

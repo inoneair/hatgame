@@ -7,5 +7,5 @@ using UnityEngine;
 public class GameSettingsData
 {
     public string wordsFile;
-    public float roundDuration;
+    public int roundDuration;
 }

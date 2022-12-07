@@ -25,8 +25,15 @@ public class MainMenuLogic
             _mainMenuView.isStartButtonInteractable = false;
         }
 
+        if (_gameSettingsController.roundDuration < 1) 
+            _gameSettingsController.roundDuration = 60;
+
+        _mainMenuView.SetRoundDurationWithoutNotify(_gameSettingsController.roundDuration);
+
+
         _mainMenuView.SubscribeOnStartButtonCLick(OnStartButtonClickHandler);
         _mainMenuView.SubscribeOnWordsFileChosen(OnWordsFileChosenHandler);
+        _mainMenuView.SubscribeOnRoundDurationChanged(OnRoundDurationChangedHandler);
         _mainMenuView.SubscribeOnExitButtonCLick(OnExitButtonClickHandler);
     }
 
@@ -39,11 +46,19 @@ public class MainMenuLogic
 
     private void OnWordsFileChosenHandler(string wordsFile)
     {
-        if(File.Exists(wordsFile))
+        if (File.Exists(wordsFile))
         {
             _gameSettingsController.wordsFile = wordsFile;
             _mainMenuView.isStartButtonInteractable = true;
-        }            
+        }
+    }
+
+    private void OnRoundDurationChangedHandler(int roundDuration)
+    {
+        if (roundDuration >= 0)
+            _gameSettingsController.roundDuration = roundDuration;
+        else
+            _mainMenuView.SetRoundDurationWithoutNotify(_gameSettingsController.roundDuration);
     }
 
     private void OnExitButtonClickHandler() => Application.Quit();
