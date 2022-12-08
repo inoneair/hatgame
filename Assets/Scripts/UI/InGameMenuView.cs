@@ -8,6 +8,7 @@ public class InGameMenuView : MonoBehaviour
 {
     [SerializeField] private Button _startRoundButton;
     [SerializeField] private Button _wordGuessedButton;
+    [SerializeField] private PauseRoundView _pauseRoundView;
     [SerializeField] private Button _skipWordButton;
     [SerializeField] private Button _returnButton;
 
@@ -18,17 +19,20 @@ public class InGameMenuView : MonoBehaviour
 
     private event Action _onStartRoundButtonClick;
     private event Action _onWordGuessedButtonClick;
+    private event Action<bool> _onIsRoundPauseActiveChanged;
     private event Action _onSkipWordButtonClick;
     private event Action _onReturnButtonClick;
-
-    private Coroutine _coroutine;
-
-    public bool isTimerRunnig => _coroutine != null;
 
     public bool StartRoundButtonEnabled
     {
         get => _startRoundButton.gameObject.activeSelf;
         set => _startRoundButton.gameObject.SetActive(value);
+    }
+
+    public bool pauseRoundViewEnabled
+    {
+        get => _pauseRoundView.gameObject.activeSelf;
+        set => _pauseRoundView.gameObject.SetActive(value);
     }
 
     public bool WordGuessedButtonEnabled
@@ -67,7 +71,7 @@ public class InGameMenuView : MonoBehaviour
         set => _wordsGuessedCountView.gameObject.SetActive(value);
     }
 
-    public float timerValue
+    public int timerValue
     {
         set => _timerView.text = value.ToString();
     }
@@ -82,23 +86,11 @@ public class InGameMenuView : MonoBehaviour
         set => _wordsGuessedCountView.text = value.ToString();
     }
 
-    public void StartTimer(float seconds, Action callback)
-    {
-        StopTimer();
-
-        _coroutine = StartCoroutine(TimerCoroutine(seconds, callback));
-    }
-
-    public void StopTimer()
-    {
-        if (isTimerRunnig)
-            StopCoroutine(_coroutine);
-    }
-
     private void Awake()
     {
         _startRoundButton.onClick.AddListener(OnStartRoundButtonClickHandler);
         _wordGuessedButton.onClick.AddListener(OnWordGuessedButtonClickHandler);
+        _pauseRoundView.SubscribeIsPauseActiveChanged(OnIsRoundPauseActiveChangedHandler);
         _skipWordButton.onClick.AddListener(OnSkipWordButtonClickHandler);
         _returnButton.onClick.AddListener(OnReturnButtonClickHandler);
     }
@@ -121,6 +113,11 @@ public class InGameMenuView : MonoBehaviour
         _onWordGuessedButtonClick += handler;
     }
 
+    public void SubscribeIsRoundPauseActiveChanged(Action<bool> handler)
+    {
+        _onIsRoundPauseActiveChanged += handler;
+    }
+
     public void SubscribeSkipWordButtonClick(Action handler)
     {
         _onSkipWordButtonClick += handler;
@@ -141,6 +138,11 @@ public class InGameMenuView : MonoBehaviour
         _onWordGuessedButtonClick?.Invoke();
     }
 
+    private void OnIsRoundPauseActiveChangedHandler(bool value)
+    {
+        _onIsRoundPauseActiveChanged?.Invoke(value);
+    }
+
     private void OnSkipWordButtonClickHandler()
     {
         _onSkipWordButtonClick?.Invoke();
@@ -149,18 +151,5 @@ public class InGameMenuView : MonoBehaviour
     private void OnReturnButtonClickHandler()
     {
         _onReturnButtonClick?.Invoke();
-    }
-
-    private IEnumerator TimerCoroutine(float seconds, Action callback)
-    {
-        while (seconds > 0)
-        {
-            yield return null;
-            seconds -= Time.deltaTime;
-            _timerView.text = ((int)seconds).ToString();
-        }
-
-        _coroutine = null;
-        callback();
     }
 }

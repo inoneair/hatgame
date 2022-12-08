@@ -5,6 +5,7 @@ public class InGameLogic
     private InGameMenuView _inGameMenuView;
     private GameSettingsController _gameSettingsController;
     private GuessWordsLogic _guessWordsLogic;
+    private Timer _roundTimer;
 
     private Action _onReturn;
 
@@ -15,14 +16,18 @@ public class InGameLogic
         _inGameMenuView = view;
         _gameSettingsController = gameSettingsController;
         _guessWordsLogic = new GuessWordsLogic();
+        _roundTimer = new Timer();
 
         _inGameMenuView.SubscribeStartRoundButtonClick(OnStartRoundButtonHandler);
         _inGameMenuView.SubscribeWordGuessedButtonClick(OnWordGuessedButtonHandler);
         _inGameMenuView.SubscribeSkipWordButtonClick(OnSkipWordButtonHandler);
         _inGameMenuView.SubscribeReturnButtonClick(OnReturnButtonClickHandler);
+
+        _roundTimer.SubscribeOnTimerTick(OnTimerTickHandler);
+        _roundTimer.SubscribeOnTimerFinished(OnTimerFinishedHandler);
     }
 
-    public void InitLogicToPlay() => SetReadyToPlayFirstRoundState();    
+    public void InitLogicToPlay() => SetReadyToPlayFirstRoundState();
 
     public void SubscribeOnReturn(Action handler)
     {
@@ -63,7 +68,7 @@ public class InGameLogic
     {
         _inGameMenuView.wordToGuess = _guessWordsLogic.GetNextWord();
 
-        _inGameMenuView.StartTimer(_gameSettingsController.roundDuration, OnTimerFinished);
+        _roundTimer.Start(_gameSettingsController.roundDuration);
 
         _guessedWordsCount = 0;
 
@@ -78,7 +83,7 @@ public class InGameLogic
 
     private void SetNoWordsState()
     {
-        _inGameMenuView.StopTimer();
+        _roundTimer.Reset();
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
 
         _inGameMenuView.StartRoundButtonEnabled = false;
@@ -105,11 +110,16 @@ public class InGameLogic
 
     private void OnReturnButtonClickHandler()
     {
-        _inGameMenuView.StopTimer();
+        _roundTimer.Reset();
         _onReturn?.Invoke();
     }
 
-    private void OnTimerFinished()
+    private void OnTimerTickHandler(float timeLeft, float deltaTime)
+    {
+        _inGameMenuView.timerValue = (int)timeLeft;
+    }
+
+    private void OnTimerFinishedHandler()
     {
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
         SetReadyToPlayAnotherRoundState();
