@@ -55,7 +55,7 @@ public class MainMenuLogic
 
     private void OnRoundDurationChangedHandler(int roundDuration)
     {
-        if (roundDuration >= 0)
+        if (roundDuration > 0)
             _gameSettingsController.roundDuration = roundDuration;
         else
             _mainMenuView.SetRoundDurationWithoutNotify(_gameSettingsController.roundDuration);
