@@ -7,17 +7,26 @@ using UnityEngine;
 
 public class Timer
 {
+    private bool _isPaused;
     private CancellationTokenSource _cts;
 
     private event Action _onTimerStarted;
-
     private event Action<float, float> _onTimerTick; //<timeLeft, deltaTime>
-
     private event Action _onTimerFinished;
+    private event Action<bool> _onIsPaused;
 
-    public bool isActive { get; private set; }
-
-    public bool isPaused { get; set; }
+    public bool isPaused
+    {
+        get => _isPaused;
+        set
+        {
+            if (_isPaused != value)
+            {
+                _isPaused = value;
+                _onIsPaused?.Invoke(_isPaused);
+            }
+        }
+    }
 
     public Timer()
     {
@@ -82,5 +91,10 @@ public class Timer
     public void SubscribeOnTimerFinished(Action handler)
     {
         _onTimerFinished += handler;
+    }
+
+    public void SubscribeIsPaused(Action<bool> handler)
+    {
+        _onIsPaused += handler;
     }
 }

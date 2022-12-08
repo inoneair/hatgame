@@ -23,7 +23,7 @@ public class InGameMenuView : MonoBehaviour
     private event Action _onSkipWordButtonClick;
     private event Action _onReturnButtonClick;
 
-    public bool StartRoundButtonEnabled
+    public bool startRoundButtonEnabled
     {
         get => _startRoundButton.gameObject.activeSelf;
         set => _startRoundButton.gameObject.SetActive(value);
@@ -35,40 +35,52 @@ public class InGameMenuView : MonoBehaviour
         set => _pauseRoundView.gameObject.SetActive(value);
     }
 
-    public bool WordGuessedButtonEnabled
+    public bool wordGuessedButtonEnabled
     {
         get => _wordGuessedButton.gameObject.activeSelf;
         set => _wordGuessedButton.gameObject.SetActive(value);
     }
 
-    public bool SkipWordButtonEnabled
+    public bool skipWordButtonEnabled
     {
         get => _skipWordButton.gameObject.activeSelf;
         set => _skipWordButton.gameObject.SetActive(value);
     }
 
-    public bool NoWordsMessageEnabled
+    public bool noWordsMessageEnabled
     {
         get => _noWordsMessage.gameObject.activeSelf;
         set => _noWordsMessage.gameObject.SetActive(value);
     }
 
-    public bool TimerViewEnabled
+    public bool timerViewEnabled
     {
         get => _timerView.gameObject.activeSelf;
         set => _timerView.gameObject.SetActive(value);
     }
 
-    public bool WordViewEnabled
+    public bool wordViewEnabled
     {
         get => _wordView.gameObject.activeSelf;
         set => _wordView.gameObject.SetActive(value);
     }
 
-    public bool WordsGuessedCountViewEnabled
+    public bool wordsGuessedCountViewEnabled
     {
         get => _wordsGuessedCountView.gameObject.activeSelf;
         set => _wordsGuessedCountView.gameObject.SetActive(value);
+    }
+
+    public bool wordGuessedButtonInteractable
+    {
+        get => _wordGuessedButton.interactable;
+        set => _wordGuessedButton.interactable = value;
+    }
+
+    public bool skipWordButtonInteractable
+    {
+        get => _skipWordButton.interactable;
+        set => _skipWordButton.interactable = value;
     }
 
     public int timerValue
@@ -84,6 +96,12 @@ public class InGameMenuView : MonoBehaviour
     public int wordsGuessedCount
     {
         set => _wordsGuessedCountView.text = value.ToString();
+    }
+
+    public bool isPauseActive
+    {
+        get => _pauseRoundView.isPauseActive;
+        set => _pauseRoundView.isPauseActive = value;
     }
 
     private void Awake()
@@ -103,6 +121,9 @@ public class InGameMenuView : MonoBehaviour
         _returnButton.onClick.RemoveListener(OnReturnButtonClickHandler);
     }
 
+    public void SetIsPauseActiveWithoutNotify(bool value) =>
+        _pauseRoundView.SetIsPauseActiveWithoutNotify(value);
+    
     public void SubscribeStartRoundButtonClick(Action handler)
     {
         _onStartRoundButtonClick += handler;

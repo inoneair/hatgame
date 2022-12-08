@@ -18,13 +18,17 @@ public class InGameLogic
         _guessWordsLogic = new GuessWordsLogic();
         _roundTimer = new Timer();
 
+        _inGameMenuView.SetIsPauseActiveWithoutNotify(false);
+
         _inGameMenuView.SubscribeStartRoundButtonClick(OnStartRoundButtonHandler);
+        _inGameMenuView.SubscribeIsRoundPauseActiveChanged((isPauseActive) => _roundTimer.isPaused = isPauseActive );
         _inGameMenuView.SubscribeWordGuessedButtonClick(OnWordGuessedButtonHandler);
         _inGameMenuView.SubscribeSkipWordButtonClick(OnSkipWordButtonHandler);
         _inGameMenuView.SubscribeReturnButtonClick(OnReturnButtonClickHandler);
 
         _roundTimer.SubscribeOnTimerTick(OnTimerTickHandler);
         _roundTimer.SubscribeOnTimerFinished(OnTimerFinishedHandler);
+        _roundTimer.SubscribeIsPaused(OnIsRoundTimerPausedHandler);
     }
 
     public void InitLogicToPlay() => SetReadyToPlayFirstRoundState();
@@ -40,26 +44,28 @@ public class InGameLogic
         _guessWordsLogic.StartToGuess(wordsToGuess);
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
 
-        _inGameMenuView.StartRoundButtonEnabled = true;
-        _inGameMenuView.WordGuessedButtonEnabled = false;
-        _inGameMenuView.SkipWordButtonEnabled = false;
-        _inGameMenuView.NoWordsMessageEnabled = false;
-        _inGameMenuView.TimerViewEnabled = false;
-        _inGameMenuView.WordViewEnabled = false;
-        _inGameMenuView.WordsGuessedCountViewEnabled = false;
+        _inGameMenuView.startRoundButtonEnabled = true;
+        _inGameMenuView.pauseRoundViewEnabled = false;
+        _inGameMenuView.wordGuessedButtonEnabled = false;        
+        _inGameMenuView.skipWordButtonEnabled = false;
+        _inGameMenuView.noWordsMessageEnabled = false;
+        _inGameMenuView.timerViewEnabled = false;
+        _inGameMenuView.wordViewEnabled = false;
+        _inGameMenuView.wordsGuessedCountViewEnabled = false;
 
         _inGameMenuView.timerValue = _gameSettingsController.roundDuration;
     }
 
     private void SetReadyToPlayAnotherRoundState()
     {
-        _inGameMenuView.StartRoundButtonEnabled = true;
-        _inGameMenuView.WordGuessedButtonEnabled = false;
-        _inGameMenuView.SkipWordButtonEnabled = false;
-        _inGameMenuView.NoWordsMessageEnabled = false;
-        _inGameMenuView.TimerViewEnabled = false;
-        _inGameMenuView.WordViewEnabled = false;
-        _inGameMenuView.WordsGuessedCountViewEnabled = true;
+        _inGameMenuView.startRoundButtonEnabled = true;
+        _inGameMenuView.pauseRoundViewEnabled = false;
+        _inGameMenuView.wordGuessedButtonEnabled = false;        
+        _inGameMenuView.skipWordButtonEnabled = false;
+        _inGameMenuView.noWordsMessageEnabled = false;
+        _inGameMenuView.timerViewEnabled = false;
+        _inGameMenuView.wordViewEnabled = false;
+        _inGameMenuView.wordsGuessedCountViewEnabled = true;
 
         _inGameMenuView.timerValue = _gameSettingsController.roundDuration;
     }
@@ -72,13 +78,14 @@ public class InGameLogic
 
         _guessedWordsCount = 0;
 
-        _inGameMenuView.StartRoundButtonEnabled = false;
-        _inGameMenuView.WordGuessedButtonEnabled = true;
-        _inGameMenuView.SkipWordButtonEnabled = true;
-        _inGameMenuView.NoWordsMessageEnabled = false;
-        _inGameMenuView.TimerViewEnabled = true;
-        _inGameMenuView.WordViewEnabled = true;
-        _inGameMenuView.WordsGuessedCountViewEnabled = false;
+        _inGameMenuView.startRoundButtonEnabled = false;
+        _inGameMenuView.pauseRoundViewEnabled = true;
+        _inGameMenuView.wordGuessedButtonEnabled = true;        
+        _inGameMenuView.skipWordButtonEnabled = true;
+        _inGameMenuView.noWordsMessageEnabled = false;
+        _inGameMenuView.timerViewEnabled = true;
+        _inGameMenuView.wordViewEnabled = true;
+        _inGameMenuView.wordsGuessedCountViewEnabled = false;
     }
 
     private void SetNoWordsState()
@@ -86,13 +93,14 @@ public class InGameLogic
         _roundTimer.Reset();
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
 
-        _inGameMenuView.StartRoundButtonEnabled = false;
-        _inGameMenuView.WordGuessedButtonEnabled = false;
-        _inGameMenuView.SkipWordButtonEnabled = false;
-        _inGameMenuView.NoWordsMessageEnabled = true;
-        _inGameMenuView.TimerViewEnabled = false;
-        _inGameMenuView.WordViewEnabled = false;
-        _inGameMenuView.WordsGuessedCountViewEnabled = true;
+        _inGameMenuView.startRoundButtonEnabled = false;
+        _inGameMenuView.pauseRoundViewEnabled = false;
+        _inGameMenuView.wordGuessedButtonEnabled = false;        
+        _inGameMenuView.skipWordButtonEnabled = false;
+        _inGameMenuView.noWordsMessageEnabled = true;
+        _inGameMenuView.timerViewEnabled = false;
+        _inGameMenuView.wordViewEnabled = false;
+        _inGameMenuView.wordsGuessedCountViewEnabled = true;
     }
 
     private void OnStartRoundButtonHandler()
@@ -106,11 +114,20 @@ public class InGameLogic
         TryToGetNextWord();
     }
 
+    private void OnIsRoundTimerPausedHandler(bool isPaused)
+    {
+        _inGameMenuView.wordGuessedButtonInteractable = !isPaused;
+        _inGameMenuView.skipWordButtonInteractable = !isPaused;
+
+        _inGameMenuView.SetIsPauseActiveWithoutNotify(isPaused);
+    }
+
     private void OnSkipWordButtonHandler() => TryToGetNextWord();
 
     private void OnReturnButtonClickHandler()
     {
         _roundTimer.Reset();
+        _roundTimer.isPaused = false;
         _onReturn?.Invoke();
     }
 
