@@ -8,6 +8,8 @@ public class GuessWordsLogic
     private LinkedList<string> _wordsToGuess;
     private LinkedListNode<string> _prevWordToGuess;
 
+    public int wordsToGuessCount => _wordsToGuess.Count;
+
     public GuessWordsLogic()
     {
         _random = new System.Random();

@@ -21,7 +21,7 @@ public class InGameLogic
         _inGameMenuView.SetIsPauseActiveWithoutNotify(false);
 
         _inGameMenuView.SubscribeStartRoundButtonClick(OnStartRoundButtonHandler);
-        _inGameMenuView.SubscribeIsRoundPauseActiveChanged((isPauseActive) => _roundTimer.isPaused = isPauseActive );
+        _inGameMenuView.SubscribeIsRoundPauseActiveChanged((isPauseActive) => _roundTimer.isPaused = isPauseActive);
         _inGameMenuView.SubscribeWordGuessedButtonClick(OnWordGuessedButtonHandler);
         _inGameMenuView.SubscribeSkipWordButtonClick(OnSkipWordButtonHandler);
         _inGameMenuView.SubscribeReturnButtonClick(OnReturnButtonClickHandler);
@@ -46,7 +46,7 @@ public class InGameLogic
 
         _inGameMenuView.startRoundButtonEnabled = true;
         _inGameMenuView.pauseRoundViewEnabled = false;
-        _inGameMenuView.wordGuessedButtonEnabled = false;        
+        _inGameMenuView.wordGuessedButtonEnabled = false;
         _inGameMenuView.skipWordButtonEnabled = false;
         _inGameMenuView.noWordsMessageEnabled = false;
         _inGameMenuView.timerViewEnabled = false;
@@ -60,7 +60,7 @@ public class InGameLogic
     {
         _inGameMenuView.startRoundButtonEnabled = true;
         _inGameMenuView.pauseRoundViewEnabled = false;
-        _inGameMenuView.wordGuessedButtonEnabled = false;        
+        _inGameMenuView.wordGuessedButtonEnabled = false;
         _inGameMenuView.skipWordButtonEnabled = false;
         _inGameMenuView.noWordsMessageEnabled = false;
         _inGameMenuView.timerViewEnabled = false;
@@ -80,7 +80,7 @@ public class InGameLogic
 
         _inGameMenuView.startRoundButtonEnabled = false;
         _inGameMenuView.pauseRoundViewEnabled = true;
-        _inGameMenuView.wordGuessedButtonEnabled = true;        
+        _inGameMenuView.wordGuessedButtonEnabled = true;
         _inGameMenuView.skipWordButtonEnabled = true;
         _inGameMenuView.noWordsMessageEnabled = false;
         _inGameMenuView.timerViewEnabled = true;
@@ -95,7 +95,7 @@ public class InGameLogic
 
         _inGameMenuView.startRoundButtonEnabled = false;
         _inGameMenuView.pauseRoundViewEnabled = false;
-        _inGameMenuView.wordGuessedButtonEnabled = false;        
+        _inGameMenuView.wordGuessedButtonEnabled = false;
         _inGameMenuView.skipWordButtonEnabled = false;
         _inGameMenuView.noWordsMessageEnabled = true;
         _inGameMenuView.timerViewEnabled = false;
@@ -139,7 +139,8 @@ public class InGameLogic
     private void OnTimerFinishedHandler()
     {
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
-        SetReadyToPlayAnotherRoundState();
+        if (_guessWordsLogic.wordsToGuessCount != 0)
+            SetReadyToPlayAnotherRoundState();
     }
 
     private void TryToGetNextWord()
