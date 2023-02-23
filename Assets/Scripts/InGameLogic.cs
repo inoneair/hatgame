@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 public class InGameLogic
 {
@@ -14,7 +15,7 @@ public class InGameLogic
     public InGameLogic(InGameMenuView view, GameSettingsController gameSettingsController)
     {
         _inGameMenuView = view;
-        _gameSettingsController = gameSettingsController;
+        //_gameSettingsController = gameSettingsController;
         _guessWordsLogic = new GuessWordsLogic();
         _roundTimer = new Timer();
 
@@ -31,16 +32,21 @@ public class InGameLogic
         _roundTimer.SubscribeIsPaused(OnIsRoundTimerPausedHandler);
     }
 
-    public void InitLogicToPlay() => SetReadyToPlayFirstRoundState();
+    public async Task InitLogicToPlay() => await SetReadyToPlayFirstRoundState();
 
     public void SubscribeOnReturn(Action handler)
     {
         _onReturn += handler;
     }
 
-    private void SetReadyToPlayFirstRoundState()
+    private async Task SetReadyToPlayFirstRoundState()
     {
-        var wordsToGuess = WordsToGuessLoader.LoadWords(_gameSettingsController.wordsFile);
+        string[] wordsToGuess = null;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        wordsToGuess = await WordsToGuessLoader.LoadWordsFromWebAsync("Words.json");
+#else
+        wordsToGuess = WordsToGuessLoader.LoadWords("Words.json");
+#endif
         _guessWordsLogic.StartToGuess(wordsToGuess);
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
 

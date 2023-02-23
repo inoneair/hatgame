@@ -23,12 +23,12 @@ public class Root : MonoBehaviour
         ToMainMenu();
     }
 
-    private void StartGame()
+    private async void StartGame()
     {
         _mainMenuView.gameObject.SetActive(false);
         _inGameMenuView.gameObject.SetActive(true);
 
-        _inGameLogic.InitLogicToPlay();
+        await _inGameLogic.InitLogicToPlay();
     }
 
     private void ToMainMenu()

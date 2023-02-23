@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class MainMenuView : MonoBehaviour
 {
     [SerializeField] Button _startButton;
-    [SerializeField] ChooseWordsFileView _chooseWordsFileView;
     [SerializeField] SetRoundDurationView _setRoundDurationView;
     [SerializeField] Button _exitButton;
 
@@ -13,12 +12,6 @@ public class MainMenuView : MonoBehaviour
     private Action<string> _onWordsFileChosen;
     private Action<int> _onRoundDurationChanged;
     private Action _onExitButonClick;
-
-    public string wordsFile
-    {
-        get => _chooseWordsFileView.filePath;
-        set => _chooseWordsFileView.filePath = value;
-    }
 
     public bool isStartButtonInteractable
     {
@@ -29,7 +22,6 @@ public class MainMenuView : MonoBehaviour
     private void Awake()
     {
         _startButton.onClick.AddListener(OnStartButtonClickHandler);
-        _chooseWordsFileView.SubscribeOnFileChosen(OnWordsFileChosenHandler);
         _setRoundDurationView.SubscribeOnRoundDurationChanged(OnRoundDurationChangedHandler);
         _exitButton.onClick.AddListener(OnExitButtonClickHandler);
     }
@@ -39,9 +31,6 @@ public class MainMenuView : MonoBehaviour
         _startButton.onClick.RemoveListener(OnStartButtonClickHandler);
         _exitButton.onClick.RemoveListener(OnExitButtonClickHandler);
     }
-
-    public void SetWordsFileWithoutNotify(string wordsFile) =>    
-        _chooseWordsFileView.SetFilePathWihoutNotify(wordsFile);
 
     public void SetRoundDurationWithoutNotify(int roundDuration) =>
         _setRoundDurationView.SetRoundDurationWithoutNotify(roundDuration);
