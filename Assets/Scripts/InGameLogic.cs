@@ -15,7 +15,7 @@ public class InGameLogic
     public InGameLogic(InGameMenuView view, GameSettingsController gameSettingsController)
     {
         _inGameMenuView = view;
-        //_gameSettingsController = gameSettingsController;
+        _gameSettingsController = gameSettingsController;
         _guessWordsLogic = new GuessWordsLogic();
         _roundTimer = new Timer();
 
