@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 public class InGameLogic
@@ -45,7 +46,8 @@ public class InGameLogic
 #if UNITY_WEBGL && !UNITY_EDITOR
         wordsToGuess = await WordsToGuessLoader.LoadWordsFromWebAsync("Words.json");
 #else
-        wordsToGuess = WordsToGuessLoader.LoadWords("Words.json");
+        var wordsFilePath = Path.Combine(Directory.GetCurrentDirectory(), "DebugData", "Words.json");
+        wordsToGuess = WordsToGuessLoader.LoadWords(wordsFilePath);
 #endif
         _guessWordsLogic.StartToGuess(wordsToGuess);
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
