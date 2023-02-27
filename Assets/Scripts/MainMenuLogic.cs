@@ -22,7 +22,6 @@ public class MainMenuLogic
 
         _mainMenuView.SubscribeOnStartButtonCLick(OnStartButtonClickHandler);
         _mainMenuView.SubscribeOnRoundDurationChanged(OnRoundDurationChangedHandler);
-        _mainMenuView.SubscribeOnExitButtonCLick(OnExitButtonClickHandler);
     }
 
     public void SubscribeOnStartGame(Action handler)
@@ -39,6 +38,4 @@ public class MainMenuLogic
         else
             _mainMenuView.SetRoundDurationWithoutNotify(_gameSettingsController.roundDuration);
     }
-
-    private void OnExitButtonClickHandler() => Application.Quit();
 }
