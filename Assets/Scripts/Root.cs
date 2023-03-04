@@ -6,6 +6,7 @@ public class Root : MonoBehaviour
 {
     [SerializeField] private MainMenuView _mainMenuView;
     [SerializeField] private InGameMenuView _inGameMenuView;
+    [SerializeField] private LoadingScreenView _loadingScreenView;
 
     private GameSettingsController _gameSettingsController;
     private MainMenuLogic _mainMenuLogic;
@@ -13,11 +14,13 @@ public class Root : MonoBehaviour
 
     private void Awake()
     {
+        _loadingScreenView.SwitchOff();
+
         _gameSettingsController = new GameSettingsController();
         _mainMenuLogic = new MainMenuLogic(_mainMenuView, _gameSettingsController);
         _mainMenuLogic.SubscribeOnStartGame(StartGame);
 
-        _inGameLogic = new InGameLogic(_inGameMenuView, _gameSettingsController);
+        _inGameLogic = new InGameLogic(_inGameMenuView, _loadingScreenView, _gameSettingsController);
         _inGameLogic.SubscribeOnReturn(ToMainMenu);
 
         ToMainMenu();

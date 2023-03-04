@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 public class InGameLogic
 {
     private InGameMenuView _inGameMenuView;
+    private LoadingScreenView _loadingScreenView;
     private GameSettingsController _gameSettingsController;
     private GuessWordsLogic _guessWordsLogic;
     private Timer _roundTimer;
@@ -13,9 +14,10 @@ public class InGameLogic
 
     private int _guessedWordsCount = 0;
 
-    public InGameLogic(InGameMenuView view, GameSettingsController gameSettingsController)
+    public InGameLogic(InGameMenuView inGameMenuView, LoadingScreenView loadingScreenView, GameSettingsController gameSettingsController)
     {
-        _inGameMenuView = view;
+        _inGameMenuView = inGameMenuView;
+        _loadingScreenView = loadingScreenView;
         _gameSettingsController = gameSettingsController;
         _guessWordsLogic = new GuessWordsLogic();
         _roundTimer = new Timer();
@@ -42,6 +44,10 @@ public class InGameLogic
 
     private async Task SetReadyToPlayFirstRoundState()
     {
+        _loadingScreenView.SwitchOn();
+        _loadingScreenView.SetState(LoadingScreenView.State.Loading);
+        await Task.Delay(1000);
+
         string[] wordsToGuess = null;
 #if UNITY_WEBGL && !UNITY_EDITOR
         wordsToGuess = await WordsToGuessLoader.LoadWordsFromWebAsync("Words.json");
@@ -49,6 +55,7 @@ public class InGameLogic
         var wordsFilePath = Path.Combine(Directory.GetCurrentDirectory(), "DebugData", "Words.json");
         wordsToGuess = WordsToGuessLoader.LoadWords(wordsFilePath);
 #endif
+
         _guessWordsLogic.StartToGuess(wordsToGuess);
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
 
@@ -62,6 +69,11 @@ public class InGameLogic
         _inGameMenuView.wordsGuessedCountViewEnabled = false;
 
         _inGameMenuView.timerValue = _gameSettingsController.roundDuration;
+
+        _loadingScreenView.SetState(LoadingScreenView.State.Complete);
+        await Task.Delay(1000);
+
+        await _loadingScreenView.SwitchOffWithAnimation();
     }
 
     private void SetReadyToPlayAnotherRoundState()
