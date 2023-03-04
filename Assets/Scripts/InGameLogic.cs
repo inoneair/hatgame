@@ -1,12 +1,14 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public class InGameLogic
 {
     private InGameMenuView _inGameMenuView;
     private LoadingScreenView _loadingScreenView;
     private GameSettingsController _gameSettingsController;
+    private WordsLibraryController _wordsLibraryController;
     private GuessWordsLogic _guessWordsLogic;
     private Timer _roundTimer;
 
@@ -14,11 +16,12 @@ public class InGameLogic
 
     private int _guessedWordsCount = 0;
 
-    public InGameLogic(InGameMenuView inGameMenuView, LoadingScreenView loadingScreenView, GameSettingsController gameSettingsController)
+    public InGameLogic(InGameMenuView inGameMenuView, LoadingScreenView loadingScreenView, GameSettingsController gameSettingsController, WordsLibraryController wordsLibraryController)
     {
         _inGameMenuView = inGameMenuView;
         _loadingScreenView = loadingScreenView;
         _gameSettingsController = gameSettingsController;
+        _wordsLibraryController = wordsLibraryController;
         _guessWordsLogic = new GuessWordsLogic();
         _roundTimer = new Timer();
 
@@ -46,15 +49,8 @@ public class InGameLogic
     {
         _loadingScreenView.SwitchOn();
         _loadingScreenView.SetState(LoadingScreenView.State.Loading);
-        await Task.Delay(1000);
-
-        string[] wordsToGuess = null;
-#if UNITY_WEBGL && !UNITY_EDITOR
-        wordsToGuess = await WordsToGuessLoader.LoadWordsFromWebAsync("Words.json");
-#else
-        var wordsFilePath = Path.Combine(Directory.GetCurrentDirectory(), "DebugData", "Words.json");
-        wordsToGuess = WordsToGuessLoader.LoadWords(wordsFilePath);
-#endif
+        
+        var wordsToGuess = await _wordsLibraryController.LoadWords(_gameSettingsController.wordsGroup);
 
         _guessWordsLogic.StartToGuess(wordsToGuess);
         _inGameMenuView.wordsGuessedCount = _guessedWordsCount;
@@ -71,7 +67,6 @@ public class InGameLogic
         _inGameMenuView.timerValue = _gameSettingsController.roundDuration;
 
         _loadingScreenView.SetState(LoadingScreenView.State.Complete);
-        await Task.Delay(1000);
 
         await _loadingScreenView.SwitchOffWithAnimation();
     }

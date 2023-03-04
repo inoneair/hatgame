@@ -4,23 +4,29 @@ using UnityEngine;
 
 public class Root : MonoBehaviour
 {
+    [SerializeField] private WebFileLoader _webFileLoader;
     [SerializeField] private MainMenuView _mainMenuView;
     [SerializeField] private InGameMenuView _inGameMenuView;
     [SerializeField] private LoadingScreenView _loadingScreenView;
 
+    private WordsLibraryController _wordsLibraryController;
     private GameSettingsController _gameSettingsController;
     private MainMenuLogic _mainMenuLogic;
     private InGameLogic _inGameLogic;
 
-    private void Awake()
+    private async void Awake()
     {
+        _webFileLoader.Init();
         _loadingScreenView.SwitchOff();
 
+        _wordsLibraryController = new WordsLibraryController();
+        await _wordsLibraryController.Init();
+
         _gameSettingsController = new GameSettingsController();
-        _mainMenuLogic = new MainMenuLogic(_mainMenuView, _gameSettingsController);
+        _mainMenuLogic = new MainMenuLogic(_mainMenuView, _gameSettingsController, _wordsLibraryController);
         _mainMenuLogic.SubscribeOnStartGame(StartGame);
 
-        _inGameLogic = new InGameLogic(_inGameMenuView, _loadingScreenView, _gameSettingsController);
+        _inGameLogic = new InGameLogic(_inGameMenuView, _loadingScreenView, _gameSettingsController, _wordsLibraryController);
         _inGameLogic.SubscribeOnReturn(ToMainMenu);
 
         ToMainMenu();

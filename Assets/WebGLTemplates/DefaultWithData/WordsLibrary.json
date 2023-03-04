@@ -1,0 +1,12 @@
+{
+	"groups": [
+	{
+		"name": "General words",
+		"file": "WordsData/GeneralWords.json"
+	},
+	{
+		"name": "Other words",
+		"file": "WordsData/OtherWords.json"
+	}
+	]
+}

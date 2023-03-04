@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class GameSettingsController
 {
-    private int _roundDuration;
+    private int _roundDuration = 60;
+    private string _wordsGroup = string.Empty;
 
     public int roundDuration
     {
@@ -11,8 +12,9 @@ public class GameSettingsController
         set => _roundDuration = value;        
     }
 
-    public GameSettingsController()
+    public string wordsGroup
     {
-        _roundDuration = 60;
+        get => _wordsGroup;
+        set => _wordsGroup = value;
     }
 }

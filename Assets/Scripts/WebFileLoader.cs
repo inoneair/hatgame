@@ -11,17 +11,24 @@ public class WebFileLoader : MonoBehaviour
 
     private static WebFileLoader _instance;
 
-    private void Awake()
+    public void Init()
     {
-        DontDestroyOnLoad(this);
-        _instance = this;
+        if (_instance == null)
+        {
+            DontDestroyOnLoad(this);
+            _instance = this;
+        }
+        else
+        {
+            Debug.LogError("Must be only one instance of WebFileLoader");
+            Destroy(gameObject);
+        }
     }
 
     public static WebFileLoader Instance => _instance;
 
     private IEnumerator GetRequest(string uri, Action<string> onGetRequestData)
     {
-        Debug.LogError($"File IRI: {uri}");
         using UnityWebRequest webRequest = UnityWebRequest.Get(uri);
         // Request and wait for the desired page.
         yield return webRequest.SendWebRequest();
@@ -42,7 +49,6 @@ public class WebFileLoader : MonoBehaviour
 
     public void GetFileData(string filePath, Action<string> onGetFileData)
     {
-        Debug.Log($"Server URL: {GetURLFromPage()}");
         StartCoroutine(GetRequest($"{GetURLFromPage()}/{filePath}", onGetFileData));
     }
 }
