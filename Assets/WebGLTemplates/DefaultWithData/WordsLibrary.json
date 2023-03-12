@@ -1,12 +1,52 @@
 {
 	"groups": [
 	{
-		"name": "General words",
-		"file": "WordsData/GeneralWords.json"
+		"name": "Pre-Int Unit1",
+		"file": "WordsData/Pre-Int_Unit1.json"
 	},
 	{
-		"name": "Other words",
-		"file": "WordsData/OtherWords.json"
+		"name": "Pre-Int Unit2",
+		"file": "WordsData/Pre-Int_Unit2.json"
+	},
+	{
+		"name": "Pre-Int Unit3",
+		"file": "WordsData/Pre-Int_Unit3.json"
+	},
+	{
+		"name": "Pre-Int Unit4",
+		"file": "WordsData/Pre-Int_Unit4.json"
+	},
+	{
+		"name": "Pre-Int Unit5",
+		"file": "WordsData/Pre-Int_Unit5.json"
+	},
+	{
+		"name": "Pre-Int Unit6",
+		"file": "WordsData/Pre-Int_Unit6.json"
+	},
+	{
+		"name": "Pre-Int Unit7",
+		"file": "WordsData/Pre-Int_Unit7.json"
+	},
+	{
+		"name": "Pre-Int Unit8",
+		"file": "WordsData/Pre-Int_Unit8.json"
+	},
+	{
+		"name": "Pre-Int Unit9",
+		"file": "WordsData/Pre-Int_Unit9.json"
+	},
+	{
+		"name": "Pre-Int Unit10",
+		"file": "WordsData/Pre-Int_Unit10.json"
+	},
+	{
+		"name": "Pre-Int Unit11",
+		"file": "WordsData/Pre-Int_Unit11.json"
+	},
+	{
+		"name": "Pre-Int Unit12",
+		"file": "WordsData/Pre-Int_Unit12.json"
 	}
 	]
 }
