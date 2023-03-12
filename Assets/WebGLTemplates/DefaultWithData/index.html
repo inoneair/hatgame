@@ -47,15 +47,23 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/HatGame_web.loader.js";
+      var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
       var config = {
-        dataUrl: buildUrl + "/HatGame_web.data",
-        frameworkUrl: buildUrl + "/HatGame_web.framework.js",
-        codeUrl: buildUrl + "/HatGame_web.wasm",
+        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+#if USE_WASM
+        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+#endif
+#if MEMORY_FILENAME
+        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+#endif
         streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "HatGame",
-        productVersion: "0.1.0",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
         showBanner: unityShowBanner,
       };
 
