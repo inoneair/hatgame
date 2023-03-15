@@ -104,7 +104,7 @@ NavMeshSettings:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_BuildSettings:
-    serializedVersion: 2
+    serializedVersion: 3
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
@@ -117,7 +117,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    accuratePlacement: 0
+    buildHeightMesh: 0
     maxJobWorkers: 0
     preserveTilesOutsideBounds: 0
     debug:
@@ -200,6 +200,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -266,9 +267,17 @@ Camera:
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -561,6 +570,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2249764641957517766, guid: c3a5044465c510f4284dcc49d455b184,
@@ -624,12 +634,16 @@ PrefabInstance:
       value: WebFileLoader
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3a5044465c510f4284dcc49d455b184, type: 3}
 --- !u!1001 &4673777196999610250
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 314483690}
     m_Modifications:
     - target: {fileID: 4673777198371395468, guid: cff721775e8e6bc47ba7af05f1c85fdb,
@@ -743,6 +757,9 @@ PrefabInstance:
       value: InGame Menu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cff721775e8e6bc47ba7af05f1c85fdb, type: 3}
 --- !u!114 &4673777196999610251 stripped
 MonoBehaviour:
@@ -761,8 +778,49 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 314483690}
     m_Modifications:
+    - target: {fileID: 1822111408364036384, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1822111408364036384, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1822111408364036384, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1822111408364036384, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2351926270610268448, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2351926270610268448, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2351926270610268448, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2351926270610268448, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7181491043789326586, guid: d4bc785b8e8fa7b409a101549e5ef495,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -771,6 +829,26 @@ PrefabInstance:
     - target: {fileID: 7181491043789326586, guid: d4bc785b8e8fa7b409a101549e5ef495,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301075009723306497, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301075009723306497, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301075009723306497, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301075009723306497, guid: d4bc785b8e8fa7b409a101549e5ef495,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7301075009961505888, guid: d4bc785b8e8fa7b409a101549e5ef495,
@@ -884,12 +962,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4bc785b8e8fa7b409a101549e5ef495, type: 3}
 --- !u!1001 &8957758451913373550
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 314483690}
     m_Modifications:
     - target: {fileID: 3024490543289484433, guid: 0c1dfd1f4375a5d4f8e6a9e2dc901b23,
@@ -1003,6 +1085,9 @@ PrefabInstance:
       value: LoadingScreen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c1dfd1f4375a5d4f8e6a9e2dc901b23, type: 3}
 --- !u!224 &8957758451913373551 stripped
 RectTransform:

@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class SetRoundDurationView : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField _roundDurationInputField;
+    [SerializeField] private InputField _roundDurationInputField;
 
     private int _roundDuration;
 
