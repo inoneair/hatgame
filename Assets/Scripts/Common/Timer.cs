@@ -8,6 +8,7 @@ using UnityEngine;
 public class Timer
 {
     private bool _isPaused;
+    private bool _isRunning;
     private CancellationTokenSource _cts;
 
     private event Action _onTimerStarted;
@@ -28,6 +29,8 @@ public class Timer
         }
     }
 
+    public bool isRunning => _isRunning;        
+    
     public Timer()
     {
     }
@@ -36,11 +39,13 @@ public class Timer
     {
         Reset();
         _cts = new CancellationTokenSource();
+        _isRunning = true;
 
         await StartInternal(seconds, _cts.Token);
 
         _cts?.Dispose();
         _cts = null;
+        _isRunning = false;
     }
 
     private async Task StartInternal(float seconds, CancellationToken token)
@@ -75,6 +80,7 @@ public class Timer
             _cts.Cancel();
             _cts.Dispose();
             _cts = null;
+            _isRunning = false;
         }
     }
 

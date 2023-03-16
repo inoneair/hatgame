@@ -7,6 +7,7 @@ using TMPro;
 public class InGameMenuView : MonoBehaviour
 {
     [SerializeField] private Button _startRoundButton;
+    [SerializeField] private Button _finishRoundButton;
     [SerializeField] private Button _wordGuessedButton;
     [SerializeField] private PauseRoundView _pauseRoundView;
     [SerializeField] private Button _skipWordButton;
@@ -18,6 +19,7 @@ public class InGameMenuView : MonoBehaviour
     [SerializeField] private WordsGuessedCountView _wordsGuessedCountView;
 
     private event Action _onStartRoundButtonClick;
+    private event Action _onFinishRoundButtonClick;
     private event Action _onWordGuessedButtonClick;
     private event Action<bool> _onIsRoundPauseActiveChanged;
     private event Action _onSkipWordButtonClick;
@@ -27,6 +29,12 @@ public class InGameMenuView : MonoBehaviour
     {
         get => _startRoundButton.gameObject.activeSelf;
         set => _startRoundButton.gameObject.SetActive(value);
+    }
+
+    public bool finishRoundButtonEnabled
+    {
+        get => _finishRoundButton.gameObject.activeSelf;
+        set => _finishRoundButton.gameObject.SetActive(value);
     }
 
     public bool pauseRoundViewEnabled
@@ -107,6 +115,7 @@ public class InGameMenuView : MonoBehaviour
     private void Awake()
     {
         _startRoundButton.onClick.AddListener(OnStartRoundButtonClickHandler);
+        _finishRoundButton.onClick.AddListener(OnFinishRoundButtonClickHandler);
         _wordGuessedButton.onClick.AddListener(OnWordGuessedButtonClickHandler);
         _pauseRoundView.SubscribeIsPauseActiveChanged(OnIsRoundPauseActiveChangedHandler);
         _skipWordButton.onClick.AddListener(OnSkipWordButtonClickHandler);
@@ -116,6 +125,7 @@ public class InGameMenuView : MonoBehaviour
     private void OnDestroy()
     {
         _startRoundButton.onClick.RemoveListener(OnStartRoundButtonClickHandler);
+        _finishRoundButton.onClick.RemoveListener(OnFinishRoundButtonClickHandler);
         _wordGuessedButton.onClick.RemoveListener(OnWordGuessedButtonClickHandler);
         _skipWordButton.onClick.RemoveListener(OnSkipWordButtonClickHandler);
         _returnButton.onClick.RemoveListener(OnReturnButtonClickHandler);
@@ -127,6 +137,11 @@ public class InGameMenuView : MonoBehaviour
     public void SubscribeStartRoundButtonClick(Action handler)
     {
         _onStartRoundButtonClick += handler;
+    }
+
+    public void SubscribeFinishRoundButtonClick(Action handler)
+    {
+        _onFinishRoundButtonClick += handler;
     }
 
     public void SubscribeWordGuessedButtonClick(Action handler)
@@ -152,6 +167,11 @@ public class InGameMenuView : MonoBehaviour
     private void OnStartRoundButtonClickHandler()
     {
         _onStartRoundButtonClick?.Invoke();
+    }
+
+    private void OnFinishRoundButtonClickHandler()
+    {
+        _onFinishRoundButtonClick?.Invoke();
     }
 
     private void OnWordGuessedButtonClickHandler()
