@@ -7,8 +7,11 @@ public class GuessWordsLogic
 
     private LinkedList<string> _wordsToGuess;
     private LinkedListNode<string> _prevWordToGuess;
+    private string _currentGuessingWord = string.Empty;
 
     public int wordsToGuessCount => _wordsToGuess.Count;
+
+    public string currentGuessingWord => _currentGuessingWord;
 
     public GuessWordsLogic()
     {
@@ -25,12 +28,15 @@ public class GuessWordsLogic
     {
         string nextWord = null;
         if (_wordsToGuess.Count == 0)
+        {
+            _currentGuessingWord = string.Empty;
             return nextWord;
-
-        if (_wordsToGuess.Count == 1)
+        }
+        else if (_wordsToGuess.Count == 1)
         {
             nextWord = _wordsToGuess.First.Value;
             _wordsToGuess.RemoveFirst();
+            _currentGuessingWord = nextWord;
             return nextWord;
         }
 
@@ -70,6 +76,7 @@ public class GuessWordsLogic
         _prevWordToGuess = currentWordToGuess.Next == null ? currentWordToGuess.Previous : currentWordToGuess.Next;
         nextWord = currentWordToGuess.Value;
         _wordsToGuess.Remove(currentWordToGuess);
+        _currentGuessingWord = nextWord;
         return nextWord;
     }
 }

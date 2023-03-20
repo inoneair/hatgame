@@ -1,40 +1,35 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class InGameMenuView : MonoBehaviour
 {
-    [SerializeField] private Button _startRoundButton;
-    [SerializeField] private Button _finishRoundButton;
+    [SerializeField] private SwitchingButton _startFinishRoundButton;
     [SerializeField] private Button _wordGuessedButton;
-    [SerializeField] private PauseRoundView _pauseRoundView;
+    [SerializeField] private SwitchingButton _pauseRoundView;
     [SerializeField] private Button _skipWordButton;
     [SerializeField] private Button _returnButton;
 
     [SerializeField] private TMP_Text _noWordsMessage;
     [SerializeField] private TimerView _timerView;
     [SerializeField] private WordView _wordView;
-    [SerializeField] private WordsGuessedCountView _wordsGuessedCountView;
+    [SerializeField] private WordsList _guessedWordsList;
+    [SerializeField] private WordsList _skippedWordsList;
 
-    private event Action _onStartRoundButtonClick;
-    private event Action _onFinishRoundButtonClick;
+    private event Action<bool> _onStartFinishRoundButtonClick;
     private event Action _onWordGuessedButtonClick;
     private event Action<bool> _onIsRoundPauseActiveChanged;
     private event Action _onSkipWordButtonClick;
     private event Action _onReturnButtonClick;
 
-    public bool startRoundButtonEnabled
+    public bool startFinishRoundButtonEnabled
     {
-        get => _startRoundButton.gameObject.activeSelf;
-        set => _startRoundButton.gameObject.SetActive(value);
-    }
-
-    public bool finishRoundButtonEnabled
-    {
-        get => _finishRoundButton.gameObject.activeSelf;
-        set => _finishRoundButton.gameObject.SetActive(value);
+        get => _startFinishRoundButton.gameObject.activeSelf;
+        set => _startFinishRoundButton.gameObject.SetActive(value);
     }
 
     public bool pauseRoundViewEnabled
@@ -73,10 +68,16 @@ public class InGameMenuView : MonoBehaviour
         set => _wordView.gameObject.SetActive(value);
     }
 
-    public bool wordsGuessedCountViewEnabled
+    public bool guessedWordsListEnabled
     {
-        get => _wordsGuessedCountView.gameObject.activeSelf;
-        set => _wordsGuessedCountView.gameObject.SetActive(value);
+        get => _guessedWordsList.gameObject.activeSelf;
+        set => _guessedWordsList.gameObject.SetActive(value);
+    }
+
+    public bool skippedWordsListEnabled
+    {
+        get => _skippedWordsList.gameObject.activeSelf;
+        set => _skippedWordsList.gameObject.SetActive(value);
     }
 
     public bool wordGuessedButtonInteractable
@@ -101,47 +102,49 @@ public class InGameMenuView : MonoBehaviour
         set => _wordView.text = value;
     }
 
-    public int wordsGuessedCount
-    {
-        set => _wordsGuessedCountView.text = value.ToString();
-    }
-
     public bool isPauseActive
     {
-        get => _pauseRoundView.isPauseActive;
-        set => _pauseRoundView.isPauseActive = value;
+        get => _pauseRoundView.isOn;
+        set => _pauseRoundView.isOn = value;
     }
 
     private void Awake()
     {
-        _startRoundButton.onClick.AddListener(OnStartRoundButtonClickHandler);
-        _finishRoundButton.onClick.AddListener(OnFinishRoundButtonClickHandler);
+        _startFinishRoundButton.SubscribeIsOnChanged(OnStartFinishRoundButtonClickHandler);
         _wordGuessedButton.onClick.AddListener(OnWordGuessedButtonClickHandler);
-        _pauseRoundView.SubscribeIsPauseActiveChanged(OnIsRoundPauseActiveChangedHandler);
+        _pauseRoundView.SubscribeIsOnChanged(OnIsRoundPauseActiveChangedHandler);
         _skipWordButton.onClick.AddListener(OnSkipWordButtonClickHandler);
         _returnButton.onClick.AddListener(OnReturnButtonClickHandler);
     }
 
     private void OnDestroy()
     {
-        _startRoundButton.onClick.RemoveListener(OnStartRoundButtonClickHandler);
-        _finishRoundButton.onClick.RemoveListener(OnFinishRoundButtonClickHandler);
+        _startFinishRoundButton.UnsubscribeIsOnChanged(OnStartFinishRoundButtonClickHandler);
         _wordGuessedButton.onClick.RemoveListener(OnWordGuessedButtonClickHandler);
         _skipWordButton.onClick.RemoveListener(OnSkipWordButtonClickHandler);
         _returnButton.onClick.RemoveListener(OnReturnButtonClickHandler);
     }
 
     public void SetIsPauseActiveWithoutNotify(bool value) =>
-        _pauseRoundView.SetIsPauseActiveWithoutNotify(value);
-    
-    public void SubscribeStartRoundButtonClick(Action handler)
+        _pauseRoundView.SetIsOnWithoutNotify(value);
+
+    public void SetStartButtonStateWithoutNotify() => _startFinishRoundButton.SetIsOnWithoutNotify(false);
+
+    public void SetGuessedWords(IList<string> words)
     {
-        _onStartRoundButtonClick += handler;
+        //_guessedWordsList.label = $"Отгадано слов -\n{words.Count}";
+        _guessedWordsList.SetWords(words);
     }
 
-    public void SubscribeFinishRoundButtonClick(Action handler)
+    public void SetSkippedWords(IList<string> words)
     {
-        _onFinishRoundButtonClick += handler;
+        //_skippedWordsList.label = $"Пропущено слов -\n{words.Count}";
+        _skippedWordsList.SetWords(words);
+    }
+
+    public void SubscribeStartFinishRoundButtonClick(Action<bool> handler)
+    {
+        _onStartFinishRoundButtonClick += handler;
     }
 
     public void SubscribeWordGuessedButtonClick(Action handler)
@@ -164,14 +167,9 @@ public class InGameMenuView : MonoBehaviour
         _onReturnButtonClick += handler;
     }
 
-    private void OnStartRoundButtonClickHandler()
+    private void OnStartFinishRoundButtonClickHandler(bool value)
     {
-        _onStartRoundButtonClick?.Invoke();
-    }
-
-    private void OnFinishRoundButtonClickHandler()
-    {
-        _onFinishRoundButtonClick?.Invoke();
+        _onStartFinishRoundButtonClick?.Invoke(value);
     }
 
     private void OnWordGuessedButtonClickHandler()
