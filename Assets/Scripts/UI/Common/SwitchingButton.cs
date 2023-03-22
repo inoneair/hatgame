@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +8,7 @@ public class SwitchingButton : MonoBehaviour
     [SerializeField] private Button _offStateButton;
 
     private bool _isOn;
+    private bool _interactable;
 
     private Action<bool> _isOnChanged;
 
@@ -26,8 +25,22 @@ public class SwitchingButton : MonoBehaviour
         }
     }
 
+    public bool interactable
+    {
+        get => _interactable;
+        set
+        {
+            _interactable = value;
+
+            _onStateButton.interactable = _interactable;
+            _offStateButton.interactable = _interactable;
+        }
+    }
+
     private void Awake()
     {
+        interactable = _onStateButton.interactable & _offStateButton.interactable;
+        
         _onStateButton.onClick.AddListener(OnStateButtonClickHandler);
         _offStateButton.onClick.AddListener(OffStateButtonClickHandler);
 

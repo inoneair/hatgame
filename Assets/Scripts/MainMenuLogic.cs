@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 public class MainMenuLogic
 {
@@ -21,7 +20,8 @@ public class MainMenuLogic
         _mainMenuView.SetRoundDurationWithoutNotify(_gameSettingsController.roundDuration);
 
         _mainMenuView.SubscribeOnStartButtonCLick(OnStartButtonClickHandler);
-        _mainMenuView.SubscribeOnRoundDurationChanged(OnRoundDurationChangedHandler);
+        _mainMenuView.SubscribeOnIsInfiniteRoundDurationChanged(OnIsInfiniteRoundDurationChangedHandler)
+;        _mainMenuView.SubscribeOnRoundDurationChanged(OnRoundDurationChangedHandler);
         _mainMenuView.SubscribeOnChooseWordsGroup(OnChooseWordsGroupHandler);
         _mainMenuView.SetWordsGroups(_wordsLibraryController.GetGroups());
 
@@ -34,6 +34,12 @@ public class MainMenuLogic
     }
 
     private void OnStartButtonClickHandler() => _onStartGame?.Invoke();
+
+    private void OnIsInfiniteRoundDurationChangedHandler(bool value)
+    {
+        _mainMenuView.isRoundDurationFieldInteractable = !value;
+        _gameSettingsController.isInfiniteRoundDuration = value;
+    }
 
     private void OnRoundDurationChangedHandler(int roundDuration)
     {

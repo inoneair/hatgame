@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
 
 public class InGameLogic
 {
@@ -55,6 +54,8 @@ public class InGameLogic
         var wordsToGuess = await _wordsLibraryController.LoadWords(_gameSettingsController.wordsGroup);
 
         _guessWordsLogic.StartToGuess(wordsToGuess);
+        
+        _inGameMenuView.pauseRoundViewInteractable = !_gameSettingsController.isInfiniteRoundDuration;
 
         _inGameMenuView.startFinishRoundButtonEnabled = true;
         _inGameMenuView.pauseRoundViewEnabled = false;
@@ -75,7 +76,6 @@ public class InGameLogic
 
     private void SetReadyToPlayAnotherRoundState()
     {
-        _inGameMenuView.SetStartButtonStateWithoutNotify();
         _inGameMenuView.startFinishRoundButtonEnabled = true;
         _inGameMenuView.pauseRoundViewEnabled = false;
         _inGameMenuView.wordGuessedButtonEnabled = false;
@@ -99,14 +99,15 @@ public class InGameLogic
 
         _inGameMenuView.wordToGuess = _guessWordsLogic.GetNextWord();
 
-        _roundTimer.Start(_gameSettingsController.roundDuration);
+        if(!_gameSettingsController.isInfiniteRoundDuration)
+            _roundTimer.Start(_gameSettingsController.roundDuration);
 
         _inGameMenuView.startFinishRoundButtonEnabled = true;
         _inGameMenuView.pauseRoundViewEnabled = true;
         _inGameMenuView.wordGuessedButtonEnabled = true;
         _inGameMenuView.skipWordButtonEnabled = true;
         _inGameMenuView.noWordsMessageEnabled = false;
-        _inGameMenuView.timerViewEnabled = true;
+        _inGameMenuView.timerViewEnabled = !_gameSettingsController.isInfiniteRoundDuration & true;
         _inGameMenuView.wordViewEnabled = true;
         _inGameMenuView.guessedWordsListEnabled = false;
         _inGameMenuView.skippedWordsListEnabled = false;
@@ -114,7 +115,8 @@ public class InGameLogic
 
     private void SetNoWordsState()
     {
-        _roundTimer.Reset();
+        if (!_gameSettingsController.isInfiniteRoundDuration)
+            _roundTimer.Reset();
 
         _inGameMenuView.startFinishRoundButtonEnabled = false;
         _inGameMenuView.pauseRoundViewEnabled = false;
@@ -177,12 +179,16 @@ public class InGameLogic
 
     private void FinishRound()
     {
-        if (_roundTimer.isRunning)
-            _roundTimer.Reset();
+        if (!_gameSettingsController.isInfiniteRoundDuration)
+        {
+            if (_roundTimer.isRunning)
+                _roundTimer.Reset();
 
-        if (_roundTimer.isPaused)
-            _roundTimer.isPaused = false;
+            if (_roundTimer.isPaused)
+                _roundTimer.isPaused = false;
+        }
 
+        _inGameMenuView.SetStartButtonStateWithoutNotify();
         if (_guessWordsLogic.wordsToGuessCount != 0)
             SetReadyToPlayAnotherRoundState();
     }

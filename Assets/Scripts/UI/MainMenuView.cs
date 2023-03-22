@@ -9,6 +9,7 @@ public class MainMenuView : MonoBehaviour
     [SerializeField] ChooseWordsGroupView _chooseWordsGroupView;
 
     private Action _onStartButonClick;
+    private Action<bool> _onIsInfiniteRoundDurationChanged;
     private Action<int> _onRoundDurationChanged;
     private Action<string> _onChooseWordsGroup;
 
@@ -18,9 +19,16 @@ public class MainMenuView : MonoBehaviour
         set => _startButton.interactable = value;
     }
 
+    public bool isRoundDurationFieldInteractable
+    {
+        get => _setRoundDurationView.isRoundDurationInputFieldInteractable;
+        set => _setRoundDurationView.isRoundDurationInputFieldInteractable = value;
+    }
+
     private void Awake()
     {
         _startButton.onClick.AddListener(OnStartButtonClickHandler);
+        _setRoundDurationView.SubscribeOnIsInfiniteRoundDurationChanged(OnIsInfiniteRoundDurationChangedHandler);
         _setRoundDurationView.SubscribeOnRoundDurationChanged(OnRoundDurationChangedHandler);
         _chooseWordsGroupView.SubscribeOnChooseWordsGroup(OnChooseWordsGroupHandler);
     }
@@ -41,6 +49,11 @@ public class MainMenuView : MonoBehaviour
         _onStartButonClick += handler;
     }
 
+    public void SubscribeOnIsInfiniteRoundDurationChanged(Action<bool> handler)
+    {
+        _onIsInfiniteRoundDurationChanged += handler;
+    }
+
     public void SubscribeOnRoundDurationChanged(Action<int> handler)
     {
         _onRoundDurationChanged += handler;
@@ -52,6 +65,8 @@ public class MainMenuView : MonoBehaviour
     }
 
     private void OnStartButtonClickHandler() => _onStartButonClick?.Invoke();
+
+    private void OnIsInfiniteRoundDurationChangedHandler(bool value) => _onIsInfiniteRoundDurationChanged?.Invoke(value);
 
     private void OnRoundDurationChangedHandler(int roundDuration) => _onRoundDurationChanged?.Invoke(roundDuration);
 

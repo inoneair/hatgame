@@ -92,6 +92,12 @@ public class InGameMenuView : MonoBehaviour
         set => _skipWordButton.interactable = value;
     }
 
+    public bool pauseRoundViewInteractable
+    {
+        get => _pauseRoundView.interactable;
+        set => _pauseRoundView.interactable = value;
+    }
+
     public int timerValue
     {
         set => _timerView.text = value.ToString();
