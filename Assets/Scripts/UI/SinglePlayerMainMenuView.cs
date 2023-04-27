@@ -2,16 +2,18 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenuView : MonoBehaviour
+public class SinglePlayerMainMenuView : MonoBehaviour
 {
-    [SerializeField] Button _startButton;
-    [SerializeField] SetRoundDurationView _setRoundDurationView;
-    [SerializeField] ChooseWordsGroupView _chooseWordsGroupView;
+    [SerializeField] private Button _startButton;
+    [SerializeField] private SetRoundDurationView _setRoundDurationView;
+    [SerializeField] private ChooseWordsGroupView _chooseWordsGroupView;
+    [SerializeField] private Button _returnButton;
 
     private Action _onStartButonClick;
     private Action<bool> _onIsInfiniteRoundDurationChanged;
     private Action<int> _onRoundDurationChanged;
     private Action<string> _onChooseWordsGroup;
+    private Action _onReturnButtonClick;
 
     public bool isStartButtonInteractable
     {
@@ -31,6 +33,7 @@ public class MainMenuView : MonoBehaviour
         _setRoundDurationView.SubscribeOnIsInfiniteRoundDurationChanged(OnIsInfiniteRoundDurationChangedHandler);
         _setRoundDurationView.SubscribeOnRoundDurationChanged(OnRoundDurationChangedHandler);
         _chooseWordsGroupView.SubscribeOnChooseWordsGroup(OnChooseWordsGroupHandler);
+        _returnButton.onClick.AddListener(OnReturnButtonClickHandler);
     }
 
     private void OnDestroy()
@@ -64,6 +67,11 @@ public class MainMenuView : MonoBehaviour
         _onChooseWordsGroup += handler;
     }
 
+    public void SubscribeOnReturnButtonClick(Action handler)
+    {
+        _onReturnButtonClick += handler;
+    }
+
     private void OnStartButtonClickHandler() => _onStartButonClick?.Invoke();
 
     private void OnIsInfiniteRoundDurationChangedHandler(bool value) => _onIsInfiniteRoundDurationChanged?.Invoke(value);
@@ -71,5 +79,7 @@ public class MainMenuView : MonoBehaviour
     private void OnRoundDurationChangedHandler(int roundDuration) => _onRoundDurationChanged?.Invoke(roundDuration);
 
     private void OnChooseWordsGroupHandler(string group) => _onChooseWordsGroup?.Invoke(group);
+
+    private void OnReturnButtonClickHandler() => _onReturnButtonClick?.Invoke();
 
 }

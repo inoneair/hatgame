@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class InGameLogic
+public class SinglePlayerInGameLogic
 {
-    private InGameMenuView _inGameMenuView;
+    private SinglePlayerInGameMenuView _inGameMenuView;
     private LoadingScreenView _loadingScreenView;
     private GameSettingsController _gameSettingsController;
     private WordsLibraryController _wordsLibraryController;
@@ -16,7 +16,7 @@ public class InGameLogic
     private List<string> _guessedWords = new List<string>();
     private List<string> _skippedWords = new List<string>();
 
-    public InGameLogic(InGameMenuView inGameMenuView, LoadingScreenView loadingScreenView, GameSettingsController gameSettingsController, WordsLibraryController wordsLibraryController)
+    public SinglePlayerInGameLogic(SinglePlayerInGameMenuView inGameMenuView, LoadingScreenView loadingScreenView, GameSettingsController gameSettingsController, WordsLibraryController wordsLibraryController)
     {
         _inGameMenuView = inGameMenuView;
         _loadingScreenView = loadingScreenView;
@@ -37,9 +37,16 @@ public class InGameLogic
         _roundTimer.SubscribeOnTimerTick(OnTimerTickHandler);
         _roundTimer.SubscribeOnTimerFinished(OnTimerFinishedHandler);
         _roundTimer.SubscribeIsPaused(OnIsRoundTimerPausedHandler);
+
+        _inGameMenuView.gameObject.SetActive(false);
     }
 
-    public async Task InitLogicToPlay() => await SetReadyToPlayFirstRoundState();
+    public async Task StartPlay()
+    {
+        _inGameMenuView.gameObject.SetActive(true);
+
+        await SetReadyToPlayFirstRoundState();
+    }
 
     public void SubscribeOnReturn(Action handler)
     {
@@ -163,6 +170,8 @@ public class InGameLogic
     private void OnReturnButtonClickHandler()
     {
         FinishRound();
+
+        _inGameMenuView.gameObject.SetActive(false);
 
         _onReturn?.Invoke();
     }

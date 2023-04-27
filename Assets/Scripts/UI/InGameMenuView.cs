@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 
-public class InGameMenuView : MonoBehaviour
+public class SinglePlayerInGameMenuView : MonoBehaviour
 {
     [SerializeField] private SwitchingButton _startFinishRoundButton;
     [SerializeField] private Button _wordGuessedButton;

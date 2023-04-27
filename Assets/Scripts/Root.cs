@@ -5,44 +5,34 @@ using UnityEngine;
 public class Root : MonoBehaviour
 {
     [SerializeField] private WebFileLoader _webFileLoader;
-    [SerializeField] private MainMenuView _mainMenuView;
-    [SerializeField] private InGameMenuView _inGameMenuView;
+    [SerializeField] private SinglePlayerMainMenuView _singlePlayerMainMenuView;
+    [SerializeField] private SinglePlayerInGameMenuView _singlePlayerInGameMenuView;
     [SerializeField] private LoadingScreenView _loadingScreenView;
+    [SerializeField] private ChooseGameTypeMenuView _chooseGameTypeMenuView;
 
     private WordsLibraryController _wordsLibraryController;
     private GameSettingsController _gameSettingsController;
-    private MainMenuLogic _mainMenuLogic;
-    private InGameLogic _inGameLogic;
+    private ChooseGameTypeMenuLogic _chooseGameTypeMenuLogic;
 
     private async void Awake()
     {
         _webFileLoader.Init();
         _loadingScreenView.SwitchOff();
 
+        _gameSettingsController = new GameSettingsController();
         _wordsLibraryController = new WordsLibraryController();
         await _wordsLibraryController.Init();
 
-        _gameSettingsController = new GameSettingsController();
-        _mainMenuLogic = new MainMenuLogic(_mainMenuView, _gameSettingsController, _wordsLibraryController);
-        _mainMenuLogic.SubscribeOnStartGame(StartGame);
+        var singlePlayerMainMenuLogic = new SinglePlayerMainMenuLogic(_singlePlayerMainMenuView, _gameSettingsController, _wordsLibraryController);
+        var singlePlayerInGameLogic = new SinglePlayerInGameLogic(_singlePlayerInGameMenuView, _loadingScreenView, _gameSettingsController, _wordsLibraryController);
 
-        _inGameLogic = new InGameLogic(_inGameMenuView, _loadingScreenView, _gameSettingsController, _wordsLibraryController);
-        _inGameLogic.SubscribeOnReturn(ToMainMenu);
+        var multiPlayerMainMenuLogic = new MultiPlayerMainMenuLogic();
 
-        ToMainMenu();
+        _chooseGameTypeMenuLogic = new ChooseGameTypeMenuLogic(_chooseGameTypeMenuView, singlePlayerMainMenuLogic, multiPlayerMainMenuLogic);
+
+        var singlePlayerEntity = new SinglePlayerEntity(singlePlayerMainMenuLogic, singlePlayerInGameLogic);
+
+        //ToMainMenu();
     }
 
-    private async void StartGame()
-    {
-        _mainMenuView.gameObject.SetActive(false);
-        _inGameMenuView.gameObject.SetActive(true);
-
-        await _inGameLogic.InitLogicToPlay();
-    }
-
-    private void ToMainMenu()
-    {
-        _mainMenuView.gameObject.SetActive(true);
-        _inGameMenuView.gameObject.SetActive(false);
-    }
 }
