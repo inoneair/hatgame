@@ -1,6 +1,6 @@
 using System;
 
-public class SinglePlayerMainMenuLogic
+public class SinglePlayerMainMenuLogic : IMenuLogic
 {
     private SinglePlayerMainMenuView _view;
     private GameSettingsController _gameSettingsController;

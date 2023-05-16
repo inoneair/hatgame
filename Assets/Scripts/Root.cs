@@ -9,6 +9,7 @@ public class Root : MonoBehaviour
     [SerializeField] private SinglePlayerInGameMenuView _singlePlayerInGameMenuView;
     [SerializeField] private LoadingScreenView _loadingScreenView;
     [SerializeField] private ChooseGameTypeMenuView _chooseGameTypeMenuView;
+    [SerializeField] private CreateOrJoinLobbyMenuView _createOrJoinLobbyMenuView;
 
     private WordsLibraryController _wordsLibraryController;
     private GameSettingsController _gameSettingsController;
@@ -26,13 +27,15 @@ public class Root : MonoBehaviour
         var singlePlayerMainMenuLogic = new SinglePlayerMainMenuLogic(_singlePlayerMainMenuView, _gameSettingsController, _wordsLibraryController);
         var singlePlayerInGameLogic = new SinglePlayerInGameLogic(_singlePlayerInGameMenuView, _loadingScreenView, _gameSettingsController, _wordsLibraryController);
 
-        var multiPlayerMainMenuLogic = new MultiPlayerMainMenuLogic();
+        var createOrJoinLobbyMenuLogic = new CreateOrJoinLobbyMenuLogic(_createOrJoinLobbyMenuView);
 
-        _chooseGameTypeMenuLogic = new ChooseGameTypeMenuLogic(_chooseGameTypeMenuView, singlePlayerMainMenuLogic, multiPlayerMainMenuLogic);
+        //var multiPlayerMainMenuLogic = new MultiPlayerMainMenuLogic(_createOrJoinLobbyMenuView);
+
+        _chooseGameTypeMenuLogic = new ChooseGameTypeMenuLogic(_chooseGameTypeMenuView, singlePlayerMainMenuLogic, createOrJoinLobbyMenuLogic);
 
         var singlePlayerEntity = new SinglePlayerEntity(singlePlayerMainMenuLogic, singlePlayerInGameLogic);
+        var multiPlayerEntity = new MultiPlayerEntity(createOrJoinLobbyMenuLogic);
 
-        //ToMainMenu();
     }
 
 }

@@ -1,41 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
-public class ChooseGameTypeMenuLogic
+public class ChooseGameTypeMenuLogic : IMenuLogic
 {
     private ChooseGameTypeMenuView _view;
 
-    private SinglePlayerMainMenuLogic _singlePlayerMainMenuLogic;
-    private MultiPlayerMainMenuLogic _multiPlayerMainMenuLogic;
+    private IMenuLogic _singlePlayerMainMenu;
+    private IMenuLogic _createOrJoinLobbyMenu;
 
-    public ChooseGameTypeMenuLogic(ChooseGameTypeMenuView view, SinglePlayerMainMenuLogic singlePlayerMainMenuLogic, MultiPlayerMainMenuLogic multiPlayerMainMenuLogic)
+    public ChooseGameTypeMenuLogic(ChooseGameTypeMenuView view, IMenuLogic singlePlayerMainMenu, IMenuLogic createOrJoinLobbyMenu)
     {
         _view = view;
-        _singlePlayerMainMenuLogic = singlePlayerMainMenuLogic;
-        _multiPlayerMainMenuLogic = multiPlayerMainMenuLogic;
+        _singlePlayerMainMenu = singlePlayerMainMenu;
+        _createOrJoinLobbyMenu = createOrJoinLobbyMenu;
 
-        _singlePlayerMainMenuLogic.SubscribeOnReturn(OnReturnToChooseGameType);
+        _singlePlayerMainMenu.SubscribeOnReturn(OnReturnToChooseGameType);
+        createOrJoinLobbyMenu.SubscribeOnReturn(OnReturnToChooseGameType);
 
         _view.SubscribeOnSinglePlayerButtonClick(OnSinglePlayerButtonClickHandler);
         _view.SubscribeOnMultiplayerButtonClick(OnMultiPlayerButtonClickHandler);
 
-        _view.gameObject.SetActive(true);
+        Show();
     }
 
     private void OnSinglePlayerButtonClickHandler()
     {
-        _view.gameObject.SetActive(false);
-        _singlePlayerMainMenuLogic.Show();
+        Hide();
+        _singlePlayerMainMenu.Show();
     }
 
     private void OnMultiPlayerButtonClickHandler()
     {
-        //_view.gameObject.SetActive(false);
+        Hide();
+        _createOrJoinLobbyMenu.Show();
     }
 
-    private void OnReturnToChooseGameType()
+    private void OnReturnToChooseGameType() => Show();    
+
+    public void Show()
     {
         _view.gameObject.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        _view.gameObject.SetActive(false);
+    }
+
+    public void SubscribeOnReturn(Action handler)
+    {
+        throw new NotImplementedException();
     }
 }
