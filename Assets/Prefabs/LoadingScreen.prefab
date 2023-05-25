@@ -386,6 +386,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3024490543289484433}
   - component: {fileID: 5343308337952962613}
+  - component: {fileID: 6359138496920899868}
   m_Layer: 5
   m_Name: LoadingScreen
   m_TagString: Untagged
@@ -407,7 +408,7 @@ RectTransform:
   m_Children:
   - {fileID: 3666965244938626415}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -426,8 +427,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9acd8cf9fabd4cf4aa5ebe0b1e3125b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 6553423590821936226}
-  _loadingImage: {fileID: 6410998574608323047}
+  _marker: {fileID: 6359138496920899868}
   _text: {fileID: 1657954717181381640}
   _loadingText: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0441\u043B\u043E\u0432"
   _loadingCompleteText: "\u0413\u043E\u0442\u043E\u0432\u043E"
+--- !u!114 &6359138496920899868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8236771557812900524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c1ce7453b5276a40bb1aa9e6e30bbb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 6553423590821936226}
+  _animatedTransform: {fileID: 6410998574608323047}
