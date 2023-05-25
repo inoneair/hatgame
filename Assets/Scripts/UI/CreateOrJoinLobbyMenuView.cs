@@ -4,11 +4,14 @@ using UnityEngine.UI;
 
 public class CreateOrJoinLobbyMenuView : MonoBehaviour
 {
+    [SerializeField] private LoadingScreenView _searchServerView;
     [SerializeField] private Button _createLobbyButton;
     [SerializeField] private Button _joinLobbyButton;
     [SerializeField] private InputField _lobbyInputField;
     [SerializeField] private Text _errorText;
     [SerializeField] private Button _returnButton;
+
+    private bool _isSearchServerRunning = false;
 
     private Action _onCreateLobbyButonClick;
     private Action _onJoinLobbyButtonClick;
@@ -27,6 +30,12 @@ public class CreateOrJoinLobbyMenuView : MonoBehaviour
         set => _joinLobbyButton.interactable = value;
     }
 
+    public bool isLobbyInputFieldInteractable
+    {
+        get => _lobbyInputField.interactable;
+        set => _lobbyInputField.interactable = value;
+    }
+
     public string errorText
     {
         get => _errorText.text;
@@ -34,7 +43,19 @@ public class CreateOrJoinLobbyMenuView : MonoBehaviour
     }
 
     public bool isErrorTextShown =>
-        _errorText.gameObject.activeSelf;    
+        _errorText.gameObject.activeSelf;  
+    
+    public bool isSearchServerRunning
+    {
+        get => _isSearchServerRunning;
+        set
+        {
+            if (_isSearchServerRunning == value)
+                return;
+
+            InternalSetIsSearchServerRunning(value);
+        }
+    }
 
     private void Awake()
     {
@@ -42,6 +63,8 @@ public class CreateOrJoinLobbyMenuView : MonoBehaviour
         _joinLobbyButton.onClick.AddListener(OnJoinLobbyButtonClickHandler);
         _lobbyInputField.onValueChanged.AddListener(OnLobbyNameChangedHandler);
         _returnButton.onClick.AddListener(OnReturnButtonClickHandler);
+
+        InternalSetIsSearchServerRunning(true);
     }
 
     private void OnDestroy()
@@ -89,4 +112,14 @@ public class CreateOrJoinLobbyMenuView : MonoBehaviour
     private void OnLobbyNameChangedHandler(string lobbyName) => _onLobbyNameChanged.Invoke(lobbyName);
 
     private void OnReturnButtonClickHandler() => _onReturnButtonClick?.Invoke();
+
+    private void InternalSetIsSearchServerRunning(bool value)
+    {
+        _isSearchServerRunning = value;
+
+        if (_isSearchServerRunning)
+            _searchServerView.SwitchOnWithAnimation();
+        else
+            _searchServerView.SwitchOffWithAnimation();
+    }
 }

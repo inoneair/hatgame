@@ -5,5 +5,7 @@ public interface IMenuLogic
     void Show();
     void Hide();
 
-    void SubscribeOnReturn(Action handler);
+    IDisposable SubscribeOnShow(Action handler);
+
+    IDisposable SubscribeOnReturn(Action handler);
 }

@@ -46,7 +46,12 @@ public class ChooseGameTypeMenuLogic : IMenuLogic
         _view.gameObject.SetActive(false);
     }
 
-    public void SubscribeOnReturn(Action handler)
+    public IDisposable SubscribeOnShow(Action handler)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IDisposable SubscribeOnReturn(Action handler)
     {
         throw new NotImplementedException();
     }

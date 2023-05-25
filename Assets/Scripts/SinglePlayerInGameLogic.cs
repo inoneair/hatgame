@@ -56,7 +56,6 @@ public class SinglePlayerInGameLogic
     private async Task SetReadyToPlayFirstRoundState()
     {
         _loadingScreenView.SwitchOn();
-        _loadingScreenView.SetState(LoadingScreenView.State.Loading);
 
         var wordsToGuess = await _wordsLibraryController.LoadWords(_gameSettingsController.wordsGroup);
 
@@ -75,8 +74,6 @@ public class SinglePlayerInGameLogic
         _inGameMenuView.skippedWordsListEnabled = false;
 
         _inGameMenuView.timerValue = _gameSettingsController.roundDuration;
-
-        _loadingScreenView.SetState(LoadingScreenView.State.Complete);
 
         await _loadingScreenView.SwitchOffWithAnimation();
     }

@@ -1,4 +1,5 @@
 using System;
+using Hatgame.Common;
 
 public class SinglePlayerMainMenuLogic : IMenuLogic
 {
@@ -7,6 +8,7 @@ public class SinglePlayerMainMenuLogic : IMenuLogic
     private WordsLibraryController _wordsLibraryController;
 
     private Action _onStartGame;
+    private Action _onShow;
     private Action _onReturn;
 
     public SinglePlayerMainMenuLogic(SinglePlayerMainMenuView view, GameSettingsController gameSettingsController, WordsLibraryController wordsLibraryController)
@@ -35,6 +37,8 @@ public class SinglePlayerMainMenuLogic : IMenuLogic
     public void Show()
     {
         _view.gameObject.SetActive(true);
+
+        _onShow?.Invoke();
     }
 
     public void Hide()
@@ -47,9 +51,18 @@ public class SinglePlayerMainMenuLogic : IMenuLogic
         _onStartGame += handler;
     }
 
-    public void SubscribeOnReturn(Action handler)
+    public IDisposable SubscribeOnShow(Action handler)
+    {
+        _onShow += handler;
+
+        return new Unsubscriber(() => _onShow -= handler);
+    }
+
+    public IDisposable SubscribeOnReturn(Action handler)
     {
         _onReturn += handler;
+
+        return new Unsubscriber(() => _onReturn -= handler);
     }
 
     private void OnStartButtonClickHandler()
