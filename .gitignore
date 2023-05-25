@@ -48,14 +48,14 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Visual Studio
+*.csproj
+*.sln
+.vs/
+
 Library/
 Temp/
 UserSettings/
 .vsconfig
-Assembly-CSharp.csproj
-Assembly-CSharp-Editor.csproj
-HatGame.sln
-.vs/
 obj/
-Assembly-CSharp-firstpass.csproj
 Builds/
